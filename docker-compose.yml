@@ -1,0 +1,26 @@
+version: '3.8'  # Define a versão do Docker Compose
+
+services:
+  postgres-finebank:  # Nome do serviço
+    image: bitnami/postgresql:latest  # Utiliza a imagem do PostgreSQL da Bitnami
+    container_name: pg-finebank  # Nome do container para facilitar a identificação
+    restart: unless-stopped  # Reinicia o container a menos que seja explicitamente parado
+    ports:
+      - "5432:5432"  # Mapeia a porta do container para a máquina host
+    environment:
+      - POSTGRESQL_USERNAME=${DATABASE_USER}  # Nome do usuário padrão
+      - POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}  # Senha do usuário (trocar para algo mais seguro)
+      - POSTGRESQL_DATABASE=${DATABASE_NAME}  # Nome do banco de dados a ser criado
+      - POSTGRESQL_POSTGRES_PASSWORD=${DATABASE_ROOT_PASSWORD}  # Senha do superusuário "postgres"
+    volumes:
+      - finebank:/bitnami/postgresql  # Persistência de dados para evitar perda ao reiniciar o container
+    networks:
+      - network_finebank  # Conecta o container a uma rede customizada para facilitar comunicação com outros serviços
+
+volumes:
+  finebank:  # Volume nomeado para armazenar os dados do banco
+    driver: local  # Usa o driver de volume padrão do Docker
+
+networks:
+  network_finebank:  # Define uma rede personalizada
+    driver: bridge  # Usa o driver de rede bridge para isolar o serviço
