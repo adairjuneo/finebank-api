@@ -12,8 +12,8 @@ import {
 } from 'fastify-type-provider-zod';
 
 import { env } from './env';
-import { errorHandler } from './errors/error-handlers';
 import { appRoutes } from './http/routes';
+import { errorHandler } from './middlewares/errors/error-handlers';
 
 const app = fastify({ logger: false }).withTypeProvider<ZodTypeProvider>();
 
