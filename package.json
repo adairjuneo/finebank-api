@@ -7,7 +7,7 @@
   "types": "src/index.ts",
   "private": true,
   "scripts": {
-    "dev": "tsx --env-file=.env src/index.ts",
+    "dev": "tsx watch --env-file=.env src/index.ts",
     "start": "node --env-file=.env dist/index.js",
     "build": "tsup src --out-dir dist",
     "typecheck": "tsc --noEmit",

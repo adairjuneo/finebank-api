@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
 import fastifySwagger from '@fastify/swagger';
@@ -50,10 +51,15 @@ app.register(fastifySwaggerUi, {
   },
 });
 
+// JWT
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: 'refreshToken',
+    signed: false,
+  },
   sign: {
-    expiresIn: '3d',
+    expiresIn: '8h',
   },
 });
 
@@ -64,8 +70,13 @@ app.register(fastifyJwt, {
 //   },
 // });
 
+// Cookies Handler
+app.register(fastifyCookie);
+
 // CORS Config and prefix routes
 app.register(fastifyCors);
+
+// Register all routes app
 app.register(appRoutes);
 
 app

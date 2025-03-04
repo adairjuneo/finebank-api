@@ -1,12 +1,9 @@
 import { FastifyInstance } from 'fastify';
 
+import { authRoutes } from '../controllers/auth/routes';
+import { userRoutes } from '../controllers/users/routes';
+
 export const appRoutes = async (app: FastifyInstance) => {
-  app.register(() => {}, { prefix: '/auth' });
-  // app.register(uploadRoutes, { prefix: '/upload' });
-  // app.register(usersRoutes, { prefix: '/users' });
-  // app.register(billingRoutes, { prefix: '/billing' });
-  // app.register(organizationsRoutes, { prefix: '/organizations' });
-  // app.register(projectsRoutes, { prefix: '/projects' });
-  // app.register(membersRoutes, { prefix: '/members' });
-  // app.register(invitesRoutes, { prefix: '/invites' });
+  app.register(authRoutes, { prefix: '/auth' });
+  app.register(userRoutes, { prefix: '/users' });
 };
