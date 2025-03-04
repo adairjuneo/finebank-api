@@ -6,13 +6,20 @@ import chalk from 'chalk';
 import { fastify } from 'fastify';
 import {
   jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 
 import { env } from './env';
+import { errorHandler } from './errors/error-handlers';
 import { appRoutes } from './http/routes';
 
 const app = fastify({ logger: false }).withTypeProvider<ZodTypeProvider>();
+
+app.setSerializerCompiler(serializerCompiler);
+app.setValidatorCompiler(validatorCompiler);
+app.setErrorHandler(errorHandler);
 
 // Swagger Config
 app.register(fastifySwagger, {
