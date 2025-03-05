@@ -32,7 +32,6 @@ const formatSchemaErrors = (errors?: ZodFastifySchemaValidationError[]) => {
 
 export const errorHandler: FastifyErrorHandler = (error, _, reply) => {
   if (error instanceof ZodError) {
-    console.log('1 =>> ', error);
     return reply.status(400).send({
       message: 'Validation error.',
       errors: error.flatten().fieldErrors,
@@ -40,7 +39,6 @@ export const errorHandler: FastifyErrorHandler = (error, _, reply) => {
   }
 
   if (hasZodFastifySchemaValidationErrors(error)) {
-    console.log('2 =>> ', error);
     return reply.status(400).send({
       message: 'Validation error.',
       errors: formatSchemaErrors(error.validation),
