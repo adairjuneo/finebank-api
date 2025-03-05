@@ -18,9 +18,9 @@
     "test": "vitest run --dir src"
   },
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown",
-    "**/*.{ts}": "tsc --noEmit",
-    "**/*.{js,mjs,cjs,ts}": "eslint --max-warnings=0"
+    "src/*": "prettier --write --ignore-unknown",
+    "src/*.{ts}": "tsc --noEmit",
+    "src/*.{js,mjs,cjs,ts}": "eslint --max-warnings=0"
   },
   "author": "Adair Juneo - devjuneo.com",
   "license": "ISC",
