@@ -15,13 +15,13 @@ export const hashPassword = async (password: string | null) => {
 
 export const comparePassword = async (
   password: string | null,
-  toCompare: string | null
+  hashedToCompare: string | null
 ) => {
-  if (!password || !toCompare) {
+  if (!password || !hashedToCompare) {
     throw new BadRequestError('Passwords to compare must be provide.');
   }
 
-  const passwordIsTheSame = await bcrypt.compare(password, toCompare);
+  const passwordIsTheSame = await bcrypt.compare(password, hashedToCompare);
 
   return passwordIsTheSame;
 };

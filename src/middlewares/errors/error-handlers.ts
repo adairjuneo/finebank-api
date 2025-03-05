@@ -16,22 +16,23 @@ type FastifyErrorHandler = FastifyInstance['errorHandler'];
 
 const formatSchemaErrors = (errors?: ZodFastifySchemaValidationError[]) => {
   if (!errors) return {};
-  let errorsFormated: { [key: string]: string[] } = {};
+  let errorsFormatted: { [key: string]: string[] } = {};
   errors.forEach((error) => {
     const keyError = String(error?.params?.issue?.path?.[0]);
     const valueError = String(error?.message);
 
-    errorsFormated = {
-      ...errorsFormated,
+    errorsFormatted = {
+      ...errorsFormatted,
       [keyError]: [valueError],
     };
   });
 
-  return errorsFormated;
+  return errorsFormatted;
 };
 
 export const errorHandler: FastifyErrorHandler = (error, _, reply) => {
   if (error instanceof ZodError) {
+    console.log('1 =>> ', error);
     return reply.status(400).send({
       message: 'Validation error.',
       errors: error.flatten().fieldErrors,
@@ -39,6 +40,7 @@ export const errorHandler: FastifyErrorHandler = (error, _, reply) => {
   }
 
   if (hasZodFastifySchemaValidationErrors(error)) {
+    console.log('2 =>> ', error);
     return reply.status(400).send({
       message: 'Validation error.',
       errors: formatSchemaErrors(error.validation),

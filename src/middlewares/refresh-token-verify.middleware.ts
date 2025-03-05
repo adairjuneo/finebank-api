@@ -9,7 +9,10 @@ export const refreshTokenVerify = async (
   } catch (err) {
     reply.clearCookie('refreshToken', { path: '/' }); // Remove cookie inválido
     return reply
-      .redirect('/login', 303)
+      .status(404)
       .send({ message: 'Invalid or expired refresh token.', err });
+    // return reply
+    //   .redirect('/login', 303)
+    //   .send({ message: 'Invalid or expired refresh token.', err });
   }
 };

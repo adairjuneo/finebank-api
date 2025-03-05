@@ -3,11 +3,11 @@ import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
 import { createUserSchema } from '@/repositories/@interfaces/users.interface';
-import { makeWithPrismaCreateUserService } from '@/services/auth/create-user.service';
+import { makeWithPrismaCreateAccountService } from '@/services/auth/create-account.service';
 
-export const createUser = async (app: FastifyInstance) => {
+export const createAccount = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
-    '/create-user',
+    '/create-account',
     {
       schema: {
         tags: ['auth'],
@@ -19,19 +19,19 @@ export const createUser = async (app: FastifyInstance) => {
               id: z.string(),
             }),
           }),
+          400: z.object({
+            message: z.string(),
+            errors: z.record(z.string(), z.array(z.string())).nullable(),
+          }),
         },
       },
     },
     async (request, reply) => {
       const { name, email, password } = request.body;
 
-      // Connect this with service factorie to crete user in Database;
-
-      const createUser = makeWithPrismaCreateUserService();
+      const createUser = makeWithPrismaCreateAccountService();
 
       const { user } = await createUser.execute({ name, email, password });
-
-      // After create user successfully, redirect the user to login page in web app;
 
       reply.status(201).send({ content: { id: user.id } });
     }

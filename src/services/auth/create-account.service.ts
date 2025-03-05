@@ -7,14 +7,14 @@ import type {
 } from '@/repositories/@interfaces/users.interface';
 import { PrismaUsersRepository } from '@/repositories/prisma/users.repository';
 
-interface CreateUserUseCaseResponse {
+interface CreateAccountUseCaseResponse {
   user: UserDTO;
 }
 
-export class CreateUserService {
+export class CreateAccountService {
   constructor(private usersRepository: IUsersRepository) {}
 
-  async execute(data: CreateUserDTO): Promise<CreateUserUseCaseResponse> {
+  async execute(data: CreateUserDTO): Promise<CreateAccountUseCaseResponse> {
     const { name, email, password } = data;
 
     const passwordHash = await hashPassword(password);
@@ -35,8 +35,8 @@ export class CreateUserService {
   }
 }
 
-export const makeWithPrismaCreateUserService = () => {
+export const makeWithPrismaCreateAccountService = () => {
   const userRepository = new PrismaUsersRepository();
-  const createUserUseCase = new CreateUserService(userRepository);
+  const createUserUseCase = new CreateAccountService(userRepository);
   return createUserUseCase;
 };

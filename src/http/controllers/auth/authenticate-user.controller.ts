@@ -2,6 +2,8 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
+import { makeWithPrismaAuthenticateUserService } from '@/services/auth/authenticate-user.service';
+
 const authBodySchema = z.object({
   email: z
     .string({ message: 'Field is required.' })
@@ -23,25 +25,25 @@ export const authenticateUser = async (app: FastifyInstance) => {
               token: z.string(),
             }),
           }),
+          400: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
     async (request, reply) => {
       const { email, password } = request.body;
 
-      // Connect this with service factorie to authenticate user;
+      const authenticateUser = makeWithPrismaAuthenticateUserService();
 
-      const tokenJwt = await reply.jwtSign(
-        {},
-        { sign: { sub: 'user-id-test' } }
-      );
+      const { user } = await authenticateUser.execute({ email, password });
+
+      const tokenJwt = await reply.jwtSign({}, { sign: { sub: user.id } });
 
       const refreshTokenJwt = await reply.jwtSign(
         {},
-        { sign: { sub: 'user-id-test', expiresIn: '3d' } }
+        { sign: { sub: user.id, expiresIn: '3d' } }
       );
-
-      // After authenticate user with successfully, redirect the user to Dashboard page in web app;
 
       reply
         .setCookie('refreshToken', refreshTokenJwt, {

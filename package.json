@@ -14,12 +14,14 @@
     "lint": "eslint --max-warnings=0",
     "prettier:fix": "npx prettier . --write",
     "prettier:check": "npx prettier . --check",
-    "clean": "rm -rf node_modules && rm -rf dist"
+    "clean": "rm -rf node_modules && rm -rf dist",
+    "test": "vitest run --dir src"
   },
   "author": "Adair Juneo - devjuneo.com",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "9.21.0",
+    "@faker-js/faker": "9.5.1",
     "@types/bcryptjs": "2.4.6",
     "@types/node": "22.13.8",
     "eslint": "9.21.0",
@@ -38,7 +40,6 @@
     "vitest": "3.0.7"
   },
   "dependencies": {
-    "@faker-js/faker": "9.5.1",
     "@fastify/cookie": "11.0.2",
     "@fastify/cors": "11.0.0",
     "@fastify/jwt": "9.0.4",

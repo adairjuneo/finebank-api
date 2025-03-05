@@ -11,9 +11,9 @@ const userSchema = z.object({
 });
 
 const createUserSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string(),
+  name: z.string({ message: 'Field required' }),
+  email: z.string().email({ message: 'Field required' }),
+  password: z.string({ message: 'Field required' }),
 });
 
 type UserDTO = z.infer<typeof userSchema>;
