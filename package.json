@@ -7,10 +7,10 @@
   "types": "src/index.ts",
   "private": true,
   "scripts": {
-    "prepare": "husky",
     "dev": "tsx watch --env-file=.env src/index.ts",
     "start": "node --env-file=.env dist/index.js",
     "build": "tsup src --out-dir dist",
+    "prepare": "husky",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --max-warnings=0",
     "prettier:fix": "npx prettier . --write",
@@ -18,9 +18,8 @@
     "test": "vitest run --dir src"
   },
   "lint-staged": {
-    "src/*": "prettier --write --ignore-unknown",
-    "src/*.{ts}": "tsc --noEmit",
-    "src/*.{js,mjs,cjs,ts}": "eslint --max-warnings=0"
+    "**/*": "prettier --write --ignore-unknown",
+    "**/*.{js,mjs,cjs,ts}": "eslint --max-warnings=0"
   },
   "author": "Adair Juneo - devjuneo.com",
   "license": "ISC",
