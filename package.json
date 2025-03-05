@@ -19,6 +19,7 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",
+    "**/*.{ts}": "tsc --noEmit",
     "**/*.{js,mjs,cjs,ts}": "eslint --max-warnings=0"
   },
   "author": "Adair Juneo - devjuneo.com",
