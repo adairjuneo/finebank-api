@@ -39,27 +39,18 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/',
   theme: {
     title: 'Finebank.io API',
-    favicon: [
-      {
-        filename: 'favicon.png',
-        rel: 'icon',
-        sizes: '16x16',
-        type: 'image/png',
-        content: Buffer.from('iVBOR...', 'base64'),
-      },
-    ],
   },
 });
 
 // JWT
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  sign: {
+    expiresIn: '8h',
+  },
   cookie: {
     cookieName: 'refreshToken',
     signed: false,
-  },
-  sign: {
-    expiresIn: '8h',
   },
 });
 

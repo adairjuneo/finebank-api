@@ -5,5 +5,7 @@ import { verifyJWT } from '@/middlewares/jwt-verify.middleware';
 import { getUserProfile } from './get-profile.controller';
 
 export const userRoutes = async (app: FastifyInstance) => {
-  app.addHook('preHandler', verifyJWT).register(getUserProfile);
+  app.addHook('onRequest', verifyJWT);
+
+  app.register(getUserProfile);
 };

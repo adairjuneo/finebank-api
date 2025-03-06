@@ -7,12 +7,9 @@ export const refreshTokenVerify = async (
   try {
     await request.jwtVerify({ onlyCookie: true });
   } catch (err) {
-    reply.clearCookie('refreshToken', { path: '/' }); // Remove cookie inválido
+    reply.clearCookie('refreshToken', { path: '/' });
     return reply
       .status(404)
       .send({ message: 'Invalid or expired refresh token.', err });
-    // return reply
-    //   .redirect('/login', 303)
-    //   .send({ message: 'Invalid or expired refresh token.', err });
   }
 };

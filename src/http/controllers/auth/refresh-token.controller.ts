@@ -2,10 +2,13 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
+import { refreshTokenVerify } from '@/middlewares/refresh-token-verify.middleware';
+
 export const refreshToken = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/refresh-token',
     {
+      onRequest: [refreshTokenVerify],
       schema: {
         tags: ['auth'],
         summary: 'Refresh token to create a new session for user',
