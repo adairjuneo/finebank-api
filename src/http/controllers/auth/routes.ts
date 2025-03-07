@@ -1,6 +1,5 @@
 import type { FastifyInstance } from 'fastify';
 
-// import { refreshTokenVerify } from '@/middlewares/refresh-token-verify.middleware';
 import { authenticateUser } from './authenticate-user.controller';
 import { createAccount } from './create-account.controller';
 import { recoveryPassword } from './recovery-password.controller';
@@ -11,6 +10,5 @@ export const authRoutes = async (app: FastifyInstance) => {
   app.register(authenticateUser);
   app.register(recoveryPassword);
 
-  // app.addHook('onRequest', refreshTokenVerify);
   app.register(refreshToken);
 };

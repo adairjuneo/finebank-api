@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
-// import { userSchema } from '@/repositories/@interfaces/users.interface';
+import { makeWithPrismaGetProfileService } from '@/services/users/get-profile.service';
 
 export const getUserProfile = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -13,20 +13,35 @@ export const getUserProfile = async (app: FastifyInstance) => {
         summary: 'Get a user account profile',
         response: {
           200: z.object({
-            content: z.object({}),
-            // content: userSchema,
+            content: z.object({
+              id: z.string(),
+              name: z.string(),
+              avatarUrl: z.string().nullish(),
+              email: z.string().email(),
+              createdAt: z.date(),
+              updatedAt: z.date(),
+            }),
           }),
         },
       },
     },
     async (request, reply) => {
-      // const { name, email, password } = request.body;
+      const { user } = request;
 
-      // Connect this with service factorie to get user account profile in Database;
+      const getProfile = makeWithPrismaGetProfileService();
 
-      // After get this data successfully, send to user the information;
+      const { userProfile } = await getProfile.execute({ userId: user.sub });
 
-      reply.status(201).send({ content: {} });
+      reply.status(201).send({
+        content: {
+          id: userProfile.id,
+          name: userProfile.name,
+          email: userProfile.email,
+          avatarUrl: userProfile.avatarUrl,
+          createdAt: userProfile.createdAt,
+          updatedAt: userProfile.updatedAt,
+        },
+      });
     }
   );
 };
