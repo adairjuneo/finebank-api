@@ -50,9 +50,6 @@ export const requestRecoveryPassword = async (app: FastifyInstance) => {
           to: [user.email, 'adair_juneo@outlook.com'],
           subject: 'Password Recovery Request - Finebank.io',
           html: htmlEmail,
-          // html: String('<h3>Code for reset password</h3><br/><p>Code: <strong>')
-          //   .concat(urlToRecovery)
-          //   .concat('</strong></p>'),
         });
 
         if (error) {
