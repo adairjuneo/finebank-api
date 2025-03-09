@@ -24,11 +24,11 @@ describe('Get user account profile service test', () => {
   });
 
   it('should be able to get user profile', async () => {
-    const { user } = await getProfileService.execute({
+    const { userProfile } = await getProfileService.execute({
       userId: usersRepository.users[0]!.id,
     });
 
-    expect(user.id).toEqual(expect.any(String));
+    expect(userProfile.id).toEqual(expect.any(String));
   });
 
   it('should not be able to get user profile by invalid id', async () => {

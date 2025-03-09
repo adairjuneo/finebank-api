@@ -9,6 +9,9 @@ const envSchema = z.object({
   PAGINATION_PAGE_SIZE: z.coerce.number().max(20),
   AUTH_SALT_PASSWORD_HASH: z.coerce.number().max(6),
   AUTH_KEY_EXPIRATION_SECONDS: z.coerce.number().min(120),
+  RESEND_API_KEY: z.string().min(1),
+  REACT_APP_URL: z.string().url(),
+  REACT_APP_URL_RECOVERY_PASSWORD: z.string().url(),
 });
 
 const _env = envSchema.safeParse(process.env);

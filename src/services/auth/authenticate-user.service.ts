@@ -39,6 +39,6 @@ export class AuthenticateUserService {
 
 export const makeWithPrismaAuthenticateUserService = () => {
   const userRepository = new PrismaUsersRepository();
-  const createUserUseCase = new AuthenticateUserService(userRepository);
-  return createUserUseCase;
+  const createUserService = new AuthenticateUserService(userRepository);
+  return createUserService;
 };

@@ -2,20 +2,22 @@ import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 
-const recoveryPasswordBodySchema = z.object({
+import { makeWithPrismaResetPasswordService } from '@/services/auth/reset-password.service';
+
+const resetPasswordBodySchema = z.object({
   email: z
     .string({ message: 'Field is required.' })
     .email({ message: 'Must be a valid e-mail.' }),
 });
 
-export const recoveryPassword = async (app: FastifyInstance) => {
+export const resetPassword = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
-    '/recovery-password',
+    '/reset-password',
     {
       schema: {
         tags: ['auth'],
-        summary: 'Recovery password of user account',
-        body: recoveryPasswordBodySchema,
+        summary: 'Reset password of user account',
+        body: resetPasswordBodySchema,
         response: {
           200: z.null(),
         },
@@ -24,9 +26,13 @@ export const recoveryPassword = async (app: FastifyInstance) => {
     async (request, reply) => {
       const { email } = request.body;
 
-      // Connect this with service factorie to recovery the password of user account;
+      const resetPassword = makeWithPrismaResetPasswordService();
 
-      // After validate successfully the resquest, send a e-mail to user for recovery the password with token;
+      const { user } = await resetPassword.execute({ email });
+
+      if (user) {
+        // Send the email right were.
+      }
 
       reply.status(200).send();
     }

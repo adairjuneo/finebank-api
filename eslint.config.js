@@ -1,6 +1,7 @@
 import pluginJs from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import pluginReact from 'eslint-plugin-react';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -8,7 +9,18 @@ import tseslint from 'typescript-eslint';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   { files: ['**/*.{js,mjs,cjs,ts}'] },
-  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+  {
+    ...pluginReact.configs.flat.recommended,
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+      ...pluginReact.configs.flat.recommended.languageOptions,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
+    },
+  },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   eslintConfigPrettier,
@@ -69,6 +81,8 @@ export default [
         'error',
         { allowAllPropertiesOnSameLine: true },
       ],
+      'react/jsx-uses-react': 'off',
+      'react/react-in-jsx-scope': 'off',
     },
     ignores: ['dist/**', 'prisma/**', 'node_modules', '.env', '.vscode/*'],
   },

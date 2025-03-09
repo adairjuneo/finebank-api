@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
-    "dev:email": "email dev --port=3334",
+    "dev:email": "email dev --dir=emails --port=3334",
     "start": "node --env-file=.env dist/index.js",
     "build": "tsup src --out-dir dist",
     "typecheck": "tsc --noEmit",
@@ -32,6 +32,7 @@
     "eslint": "9.21.0",
     "eslint-config-prettier": "10.0.2",
     "eslint-plugin-prettier": "5.2.3",
+    "eslint-plugin-react": "7.37.4",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "globals": "16.0.0",
     "lint-staged": "15.4.3",
@@ -54,6 +55,7 @@
     "@fastify/swagger-ui": "5.2.2",
     "@prisma/client": "6.4.1",
     "@react-email/components": "0.0.33",
+    "@react-email/render": "1.0.5",
     "bcryptjs": "3.0.2",
     "chalk": "5.4.1",
     "fastify": "5.2.1",
@@ -61,6 +63,7 @@
     "fastify-type-provider-zod": "4.0.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "resend": "4.1.2",
     "zod": "3.24.2"
   }
 }
