@@ -25,17 +25,17 @@ export class InMemoryUsersRepository implements IUsersRepository {
     return user;
   }
   async findById(id: string): Promise<UserDTO | null> {
-    const userFinded = this.users.find((user) => user.id === id);
+    const userFind = this.users.find((user) => user.id === id);
 
-    if (!userFinded) return null;
+    if (!userFind) return null;
 
-    return userFinded;
+    return userFind;
   }
   async findByEmail(email: string): Promise<UserDTO | null> {
-    const userFinded = this.users.find((user) => user.email === email);
+    const userFind = this.users.find((user) => user.email === email);
 
-    if (!userFinded) return null;
+    if (!userFind) return null;
 
-    return userFinded;
+    return userFind;
   }
 }
