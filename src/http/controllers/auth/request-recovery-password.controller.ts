@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { env } from '@/env';
 import { sendMail } from '@/lib/email';
-import { makeWithPrismaResetPasswordService } from '@/services/auth/reset-password.service';
+import { makeWithPrismaRequestRecoveryPasswordService } from '@/services/auth/request-recovery-password.service';
 
 import { HtmlRecoveryPasswordEmail } from '../../../../emails/recovery-password';
 
@@ -31,14 +31,17 @@ export const requestRecoveryPassword = async (app: FastifyInstance) => {
     async (request, reply) => {
       const { email } = request.body;
 
-      const resetPassword = makeWithPrismaResetPasswordService();
+      const requestResetPassword =
+        makeWithPrismaRequestRecoveryPasswordService();
 
-      const { user } = await resetPassword.execute({ email });
+      const { user, urlToRecovery } = await requestResetPassword.execute({
+        email,
+      });
 
-      if (user) {
+      if (user && urlToRecovery) {
         const htmlEmail = await HtmlRecoveryPasswordEmail({
           userFirstLastName: user.name,
-          resetPasswordLink: 'https://www.google.com.br',
+          resetPasswordLink: urlToRecovery,
           finebankProductionLink: env.REACT_APP_URL,
         });
 
@@ -47,6 +50,9 @@ export const requestRecoveryPassword = async (app: FastifyInstance) => {
           to: [user.email, 'adair_juneo@outlook.com'],
           subject: 'Password Recovery Request - Finebank.io',
           html: htmlEmail,
+          // html: String('<h3>Code for reset password</h3><br/><p>Code: <strong>')
+          //   .concat(urlToRecovery)
+          //   .concat('</strong></p>'),
         });
 
         if (error) {

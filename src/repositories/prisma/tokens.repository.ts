@@ -6,7 +6,7 @@ import type {
   TokenDTO,
 } from '../@interfaces/tokens.interface';
 
-export class PrismaUsersRepository implements ITokensRepository {
+export class PrismaTokensRepository implements ITokensRepository {
   async create(data: CreateTokenDTO): Promise<TokenDTO> {
     const token = await prisma.token.create({
       data: {
