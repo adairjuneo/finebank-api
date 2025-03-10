@@ -1,34 +1,67 @@
-import type {
-  CreateUserDTO,
-  IUsersRepository,
-  UserDTO,
-} from '@/repositories/@interfaces/users.interface';
+import { comparePassword, hashPassword } from '@/lib/password';
+import { BadRequestError } from '@/middlewares/errors/bad-request.error';
+import type { ITokensRepository } from '@/repositories/@interfaces/tokens.interface';
+import type { IUsersRepository } from '@/repositories/@interfaces/users.interface';
+import { PrismaTokensRepository } from '@/repositories/prisma/tokens.repository';
 import { PrismaUsersRepository } from '@/repositories/prisma/users.repository';
 
-interface ResetPasswordServiceResponse {
-  user: UserDTO | null;
-  urlToReset: string | null;
+interface ResetPasswordServiceRequest {
+  code: string;
+  password: string;
 }
 
 export class ResetPasswordService {
-  constructor(private usersRepository: IUsersRepository) {}
-  async execute(
-    data: Pick<CreateUserDTO, 'email'>
-  ): Promise<ResetPasswordServiceResponse> {
-    const { email } = data;
+  constructor(
+    private usersRepository: IUsersRepository,
+    private tokensRepository: ITokensRepository
+  ) {}
+  async execute(data: ResetPasswordServiceRequest): Promise<void> {
+    const { code, password } = data;
 
-    const userFind = await this.usersRepository.findByEmail(email);
+    const tokenFind = await this.tokensRepository.findById(code);
 
-    if (userFind) {
-      // Generate the token with the URL
+    if (!tokenFind) {
+      throw new BadRequestError('Code provided is not valid.');
     }
 
-    return { user: userFind, urlToReset: 'null' };
+    const userFind = await this.usersRepository.findById(tokenFind.userId);
+
+    if (!userFind) {
+      throw new BadRequestError('User not found.');
+    }
+
+    const newPasswordMatchWithCurrent = await comparePassword(
+      password,
+      userFind.passwordHash
+    );
+
+    if (newPasswordMatchWithCurrent) {
+      throw new BadRequestError(
+        'The new password must be different to current.'
+      );
+    }
+
+    const newPasswordHashed = await hashPassword(password);
+
+    await this.usersRepository.update(
+      {
+        name: userFind.name,
+        email: userFind.email,
+        password: newPasswordHashed,
+      },
+      userFind.id
+    );
+
+    await this.tokensRepository.deleteById(tokenFind.id);
   }
 }
 
 export const makeWithPrismaResetPasswordService = () => {
   const userRepository = new PrismaUsersRepository();
-  const resetPasswordService = new ResetPasswordService(userRepository);
+  const tokenRepository = new PrismaTokensRepository();
+  const resetPasswordService = new ResetPasswordService(
+    userRepository,
+    tokenRepository
+  );
   return resetPasswordService;
 };

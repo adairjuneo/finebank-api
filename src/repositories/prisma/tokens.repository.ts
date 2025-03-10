@@ -17,6 +17,7 @@ export class PrismaTokensRepository implements ITokensRepository {
 
     return token;
   }
+
   async findById(id: string): Promise<TokenDTO | null> {
     const tokenFind = await prisma.token.findUnique({
       where: {
@@ -25,6 +26,14 @@ export class PrismaTokensRepository implements ITokensRepository {
     });
 
     return tokenFind;
+  }
+
+  async deleteById(id: string): Promise<void> {
+    await prisma.token.delete({
+      where: {
+        id,
+      },
+    });
   }
 
   async findByUserId(userId: string): Promise<TokenDTO[]> {

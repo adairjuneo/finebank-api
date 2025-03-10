@@ -24,6 +24,7 @@ type CreateTokenDTO = z.infer<typeof createTokenSchema>;
 interface ITokensRepository {
   create(data: CreateTokenDTO): Promise<TokenDTO>;
   findById(id: string): Promise<TokenDTO | null>;
+  deleteById(id: string): Promise<void>;
   findByUserId(userId: string): Promise<TokenDTO[]>;
 }
 

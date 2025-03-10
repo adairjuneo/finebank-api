@@ -4,11 +4,16 @@ import { z } from 'zod';
 
 import { makeWithPrismaResetPasswordService } from '@/services/auth/reset-password.service';
 
-const resetPasswordBodySchema = z.object({
-  email: z
-    .string({ message: 'Field is required.' })
-    .email({ message: 'Must be a valid e-mail.' }),
-});
+const resetPasswordBodySchema = z
+  .object({
+    code: z.string({ message: 'Field is required.' }),
+    password: z.string({ message: 'Field is required.' }),
+    passwordConfirmation: z.string({ message: 'Field is required.' }),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: 'Passwords must be equal.',
+    path: ['password_confirmation'],
+  });
 
 export const resetPassword = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -24,17 +29,13 @@ export const resetPassword = async (app: FastifyInstance) => {
       },
     },
     async (request, reply) => {
-      const { email } = request.body;
+      const { code, password } = request.body;
 
       const resetPassword = makeWithPrismaResetPasswordService();
 
-      const { user } = await resetPassword.execute({ email });
+      await resetPassword.execute({ code, password });
 
-      if (user) {
-        // Send the email right were.
-      }
-
-      reply.status(200).send();
+      reply.status(204).send();
     }
   );
 };

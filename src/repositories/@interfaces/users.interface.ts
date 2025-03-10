@@ -16,14 +16,22 @@ const createUserSchema = z.object({
   password: z.string({ message: 'Field required' }),
 });
 
+const updateUserSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+});
+
 type UserDTO = z.infer<typeof userSchema>;
 type CreateUserDTO = z.infer<typeof createUserSchema>;
+type UpdateUserDTO = z.infer<typeof updateUserSchema>;
 
 interface IUsersRepository {
   create(data: CreateUserDTO): Promise<UserDTO>;
+  update(data: UpdateUserDTO, userId: string): Promise<UserDTO | null>;
   findById(id: string): Promise<UserDTO | null>;
   findByEmail(email: string): Promise<UserDTO | null>;
 }
 
-export { createUserSchema, userSchema };
-export type { CreateUserDTO, IUsersRepository, UserDTO };
+export { createUserSchema, updateUserSchema, userSchema };
+export type { CreateUserDTO, IUsersRepository, UpdateUserDTO, UserDTO };

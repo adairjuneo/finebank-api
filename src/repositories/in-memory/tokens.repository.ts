@@ -21,12 +21,17 @@ export class InMemoryTokensRepository implements ITokensRepository {
 
     return token;
   }
+
   async findById(id: string): Promise<TokenDTO | null> {
     const tokenFind = this.tokens.find((token) => token.id === id);
 
     if (!tokenFind) return null;
 
     return tokenFind;
+  }
+
+  async deleteById(id: string): Promise<void> {
+    this.tokens = this.tokens.filter((token) => token.id === id);
   }
 
   async findByUserId(userId: string): Promise<TokenDTO[]> {
