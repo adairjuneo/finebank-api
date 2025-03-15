@@ -1,8 +1,11 @@
 import { randomUUID } from 'node:crypto';
 
+import { env } from '@/env';
+
 import type {
   CreatePaymentMethodDTO,
   IPaymentMethodsRepository,
+  ListPaymentMethodsDTO,
   PaymentMethodDTO,
 } from '../@interfaces/payment-methods.interface';
 
@@ -15,7 +18,6 @@ export class InMemoryPaymentMethodsRepository
     const paymentMethod: PaymentMethodDTO = {
       id: randomUUID(),
       description: data.description,
-      transactions: [],
       userId: data.userId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -40,5 +42,37 @@ export class InMemoryPaymentMethodsRepository
     );
 
     return paymentMethods;
+  }
+
+  async getListByDescription(
+    userId: string,
+    description: string,
+    page: number
+  ): Promise<ListPaymentMethodsDTO> {
+    const totalListPaymentMethods = this.paymentMethods.filter(
+      (item) => item.userId === userId && item.description.includes(description)
+    );
+
+    const listPaymentMethodsPaginated = totalListPaymentMethods.slice(
+      (page - 1) * env.PAGINATION_PAGE_SIZE,
+      page * env.PAGINATION_PAGE_SIZE
+    );
+
+    const totalPagesOfPaymentMethods = Math.round(
+      listPaymentMethodsPaginated.length / env.PAGINATION_PAGE_SIZE
+    );
+
+    const hasNextPageOfPaymentMethods =
+      totalPagesOfPaymentMethods === page ? false : true;
+
+    return {
+      data: listPaymentMethodsPaginated,
+      pagination: {
+        pageIndex: page,
+        totalPages: totalPagesOfPaymentMethods,
+        totalCount: totalListPaymentMethods.length,
+        hasNextPage: hasNextPageOfPaymentMethods,
+      },
+    };
   }
 }
