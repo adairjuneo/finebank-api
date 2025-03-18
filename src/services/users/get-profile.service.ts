@@ -12,6 +12,7 @@ interface GetProfileServiceRequest {
 interface GetProfileServiceResponse {
   userProfile: UserDTO;
 }
+
 export class GetProfileService {
   constructor(private userRepository: IUsersRepository) {}
 

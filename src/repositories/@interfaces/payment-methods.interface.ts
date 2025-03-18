@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { paginationSchema } from './commons.interface';
+
 const paymentMethodSchema = z.object({
   id: z.string(),
   userId: z.string(),
@@ -14,32 +16,31 @@ const createPaymentMethodSchema = z.object({
   userId: z.string(),
 });
 
-const listPaymentMethods = z.object({
+const listPaymentMethodsSchema = z.object({
   data: z.array(paymentMethodSchema),
-  pagination: z.object({
-    pageIndex: z.number(),
-    totalPages: z.number(),
-    totalCount: z.number(),
-    hasNextPage: z.boolean(),
-  }),
+  pagination: paginationSchema,
 });
 
 type PaymentMethodDTO = z.infer<typeof paymentMethodSchema>;
 type CreatePaymentMethodDTO = z.infer<typeof createPaymentMethodSchema>;
-type ListPaymentMethodsDTO = z.infer<typeof listPaymentMethods>;
+type ListPaymentMethodsDTO = z.infer<typeof listPaymentMethodsSchema>;
 
 interface IPaymentMethodsRepository {
   create(data: CreatePaymentMethodDTO): Promise<PaymentMethodDTO>;
   findById(id: string): Promise<PaymentMethodDTO | null>;
   findByUserId(userId: string): Promise<PaymentMethodDTO[]>;
-  getListByDescription(
-    userId: string,
-    description: string,
-    page: number
-  ): Promise<ListPaymentMethodsDTO>;
+  getListByDescription(params: {
+    userId: string;
+    description?: string;
+    page: number;
+  }): Promise<ListPaymentMethodsDTO>;
 }
 
-export { createPaymentMethodSchema, listPaymentMethods, paymentMethodSchema };
+export {
+  createPaymentMethodSchema,
+  listPaymentMethodsSchema,
+  paymentMethodSchema,
+};
 export type {
   CreatePaymentMethodDTO,
   IPaymentMethodsRepository,

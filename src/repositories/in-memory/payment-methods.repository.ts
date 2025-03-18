@@ -44,13 +44,19 @@ export class InMemoryPaymentMethodsRepository
     return paymentMethods;
   }
 
-  async getListByDescription(
-    userId: string,
-    description: string,
-    page: number
-  ): Promise<ListPaymentMethodsDTO> {
+  async getListByDescription(params: {
+    page: number;
+    userId: string;
+    description?: string;
+  }): Promise<ListPaymentMethodsDTO> {
+    const { page, userId, description } = params;
+
     const totalListPaymentMethods = this.paymentMethods.filter(
-      (item) => item.userId === userId && item.description.includes(description)
+      (item) =>
+        item.userId === userId &&
+        item.description
+          .toLowerCase()
+          .includes(description?.toLowerCase() ?? '')
     );
 
     const listPaymentMethodsPaginated = totalListPaymentMethods.slice(
@@ -63,7 +69,7 @@ export class InMemoryPaymentMethodsRepository
     );
 
     const hasNextPageOfPaymentMethods =
-      totalPagesOfPaymentMethods === page ? false : true;
+      totalPagesOfPaymentMethods !== page ? false : true;
 
     return {
       data: listPaymentMethodsPaginated,

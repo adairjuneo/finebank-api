@@ -39,17 +39,20 @@ export class PrismaPaymentMethodsRepository
     return paymentMethod;
   }
 
-  async getListByDescription(
-    userId: string,
-    description: string,
-    page: number
-  ): Promise<ListPaymentMethodsDTO> {
+  async getListByDescription(params: {
+    page: number;
+    userId: string;
+    description?: string;
+  }): Promise<ListPaymentMethodsDTO> {
+    const { page, userId, description } = params;
+
     const prismaReturn = await prisma.$transaction([
       prisma.paymentMethod.count({
         where: {
           userId,
           description: {
             contains: description,
+            mode: 'insensitive',
           },
         },
       }),
@@ -58,6 +61,7 @@ export class PrismaPaymentMethodsRepository
           userId,
           description: {
             contains: description,
+            mode: 'insensitive',
           },
         },
         orderBy: {
@@ -73,7 +77,7 @@ export class PrismaPaymentMethodsRepository
     );
 
     const hasNextPageOfPaymentMethods =
-      totalPagesOfPaymentMethods === page ? false : true;
+      totalPagesOfPaymentMethods !== page ? false : true;
 
     return {
       data: prismaReturn[1],
