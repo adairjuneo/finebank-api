@@ -64,12 +64,12 @@ export class InMemoryPaymentMethodsRepository
       page * env.PAGINATION_PAGE_SIZE
     );
 
-    const totalPagesOfPaymentMethods = Math.round(
-      listPaymentMethodsPaginated.length / env.PAGINATION_PAGE_SIZE
+    const totalPagesOfPaymentMethods = Math.ceil(
+      totalListPaymentMethods.length / env.PAGINATION_PAGE_SIZE
     );
 
     const hasNextPageOfPaymentMethods =
-      totalPagesOfPaymentMethods !== page ? false : true;
+      totalPagesOfPaymentMethods > page ? true : false;
 
     return {
       data: listPaymentMethodsPaginated,
