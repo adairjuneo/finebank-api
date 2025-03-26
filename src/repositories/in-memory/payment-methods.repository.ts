@@ -28,6 +28,22 @@ export class InMemoryPaymentMethodsRepository
     return paymentMethod;
   }
 
+  async delete(userId: string, id: string): Promise<string | null> {
+    const paymentMethodToDeleted = this.paymentMethods.find(
+      (paymentMethod) =>
+        paymentMethod.userId === userId && paymentMethod.id === id
+    );
+
+    const newPaymentMethods = this.paymentMethods.filter(
+      (paymentMethod) =>
+        paymentMethod.userId === userId && paymentMethod.id !== id
+    );
+
+    this.paymentMethods = newPaymentMethods;
+
+    return paymentMethodToDeleted?.id ?? null;
+  }
+
   async findById(id: string): Promise<PaymentMethodDTO | null> {
     const paymentMethod =
       this.paymentMethods.find((paymentMethod) => paymentMethod.id === id) ??

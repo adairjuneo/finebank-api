@@ -19,6 +19,20 @@ export class PrismaPaymentMethodsRepository
     return paymentMethod;
   }
 
+  async delete(userId: string, id: string): Promise<string | null> {
+    const paymentMethodDeleted = await prisma.paymentMethod.delete({
+      where: {
+        id,
+        userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    return paymentMethodDeleted.id ?? null;
+  }
+
   async findById(id: string): Promise<PaymentMethodDTO | null> {
     const paymentMethod = await prisma.paymentMethod.findUnique({
       where: {

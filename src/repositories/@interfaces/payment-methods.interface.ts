@@ -27,6 +27,7 @@ type ListPaymentMethodsDTO = z.infer<typeof listPaymentMethodsSchema>;
 
 interface IPaymentMethodsRepository {
   create(data: CreatePaymentMethodDTO): Promise<PaymentMethodDTO>;
+  delete(userId: string, id: string): Promise<string | null>;
   findById(id: string): Promise<PaymentMethodDTO | null>;
   findByUserId(userId: string): Promise<PaymentMethodDTO[]>;
   findByDescription(
