@@ -3,6 +3,7 @@ import type {
   IPaymentMethodsRepository,
   PaymentMethodDTO,
 } from '@/repositories/@interfaces/payment-methods.interface';
+import { PrismaPaymentMethodsRepository } from '@/repositories/prisma/payment-methods.repository';
 
 interface CreatePaymentMethodServiceRequest {
   userId: string;
@@ -42,3 +43,12 @@ export class CreatePaymentMethodService {
     return { paymentMethod };
   }
 }
+
+export const makeWithPrismaCreatePaymentMethodService = () => {
+  const paymentMethodsRepository = new PrismaPaymentMethodsRepository();
+  const createPaymentMethodService = new CreatePaymentMethodService(
+    paymentMethodsRepository
+  );
+
+  return createPaymentMethodService;
+};
