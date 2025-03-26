@@ -44,6 +44,20 @@ export class InMemoryPaymentMethodsRepository
     return paymentMethods;
   }
 
+  async findByDescription(
+    userId: string,
+    description: string
+  ): Promise<PaymentMethodDTO | null> {
+    const paymentMethod =
+      this.paymentMethods.find(
+        (paymentMethod) =>
+          paymentMethod.userId === userId &&
+          paymentMethod.description === description
+      ) ?? null;
+
+    return paymentMethod;
+  }
+
   async getListByDescription(params: {
     page: number;
     userId: string;

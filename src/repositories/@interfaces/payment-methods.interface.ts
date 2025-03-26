@@ -29,6 +29,10 @@ interface IPaymentMethodsRepository {
   create(data: CreatePaymentMethodDTO): Promise<PaymentMethodDTO>;
   findById(id: string): Promise<PaymentMethodDTO | null>;
   findByUserId(userId: string): Promise<PaymentMethodDTO[]>;
+  findByDescription(
+    userId: string,
+    id: string
+  ): Promise<PaymentMethodDTO | null>;
   getListByDescription(params: {
     userId: string;
     description?: string;

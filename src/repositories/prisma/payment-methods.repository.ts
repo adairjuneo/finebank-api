@@ -39,6 +39,22 @@ export class PrismaPaymentMethodsRepository
     return paymentMethod;
   }
 
+  async findByDescription(
+    userId: string,
+    description: string
+  ): Promise<PaymentMethodDTO | null> {
+    const paymentMethod = await prisma.paymentMethod.findFirst({
+      where: {
+        userId,
+        description: {
+          equals: description,
+        },
+      },
+    });
+
+    return paymentMethod;
+  }
+
   async getListByDescription(params: {
     page: number;
     userId: string;
