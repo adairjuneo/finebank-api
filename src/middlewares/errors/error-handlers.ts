@@ -76,6 +76,12 @@ export const errorHandler: FastifyErrorHandler = (error, _, reply) => {
     });
   }
 
+  if (error.code === 'P2025') {
+    return reply.status(404).send({
+      message: 'Resource Not Found.',
+    });
+  }
+
   console.error(chalk.redBright(error));
 
   return reply.status(500).send({
