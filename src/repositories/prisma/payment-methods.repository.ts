@@ -19,6 +19,23 @@ export class PrismaPaymentMethodsRepository
     return paymentMethod;
   }
 
+  async update(
+    id: string,
+    data: CreatePaymentMethodDTO
+  ): Promise<PaymentMethodDTO> {
+    const paymentMethod = await prisma.paymentMethod.update({
+      where: {
+        id,
+        userId: data.userId,
+      },
+      data: {
+        description: data.description,
+      },
+    });
+
+    return paymentMethod;
+  }
+
   async delete(userId: string, id: string): Promise<string | null> {
     const paymentMethodDeleted = await prisma.paymentMethod.delete({
       where: {

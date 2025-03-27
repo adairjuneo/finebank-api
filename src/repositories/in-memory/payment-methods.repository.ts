@@ -28,6 +28,31 @@ export class InMemoryPaymentMethodsRepository
     return paymentMethod;
   }
 
+  async update(
+    id: string,
+    data: CreatePaymentMethodDTO
+  ): Promise<PaymentMethodDTO> {
+    const newPaymentMethods = this.paymentMethods.map((paymentMethod) => {
+      if (paymentMethod.id === id && paymentMethod.userId === data.userId) {
+        return {
+          ...paymentMethod,
+          description: data.description,
+        };
+      } else {
+        return paymentMethod;
+      }
+    });
+
+    this.paymentMethods = newPaymentMethods;
+
+    const paymentMethodUpdated = newPaymentMethods.find(
+      (paymentMethod) =>
+        paymentMethod.id === id && paymentMethod.userId === data.userId
+    );
+
+    return paymentMethodUpdated!;
+  }
+
   async delete(userId: string, id: string): Promise<string | null> {
     const paymentMethodToDeleted = this.paymentMethods.find(
       (paymentMethod) =>

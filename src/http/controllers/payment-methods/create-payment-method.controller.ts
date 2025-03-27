@@ -35,9 +35,7 @@ export const createNewPaymentMethod = async (app: FastifyInstance) => {
         description,
       });
 
-      reply.status(200).send({
-        content: paymentMethod,
-      });
+      reply.status(200).send({ content: paymentMethod });
     }
   );
 };

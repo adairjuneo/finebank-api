@@ -36,9 +36,7 @@ export const deletePaymentMethod = async (app: FastifyInstance) => {
         paymentMethodId: id,
       });
 
-      reply.status(200).send({
-        content: { id: paymentMethodId },
-      });
+      reply.status(200).send({ content: { id: paymentMethodId } });
     }
   );
 };
