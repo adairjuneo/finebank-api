@@ -14,7 +14,7 @@ export const listOfPaymentMethods = async (app: FastifyInstance) => {
         tags: ['payment-methods'],
         summary: 'List of payment methods by user',
         querystring: z.object({
-          page: z.string().default('1'),
+          page: z.string().default('1').transform(Number),
           description: z.string().optional(),
         }),
         response: {
@@ -29,14 +29,12 @@ export const listOfPaymentMethods = async (app: FastifyInstance) => {
       const { user, query } = request;
       const { page, description } = query;
 
-      const pageNumber = Number.parseInt(page);
-
       const listPaymentMethods = makeWithPrismaListPaymentMethodsService();
 
       const { paymentMethods } = await listPaymentMethods.execute({
-        page: pageNumber,
         userId: user.sub,
-        description: description,
+        page,
+        description,
       });
 
       reply.status(200).send({
