@@ -11,22 +11,29 @@ import type {
   ListOfTransactionsDTO,
   ListOfTransactionsType,
   TransactionDTO,
+  UpdateTransactionDTO,
 } from '../@interfaces/transactions.interface';
 
 export class PrismaTransactionsRepository implements ITransactionsRepository {
-  async create(data: CreateTransactionDTO): Promise<TransactionDTO> {
+  async create({
+    data,
+    params,
+  }: CreateTransactionDTO): Promise<TransactionDTO> {
     const transaction = await prisma.transaction.create({
-      data,
+      data: { ...data, ...params },
     });
 
     return transaction;
   }
 
-  async update(data: CreateTransactionDTO): Promise<TransactionDTO> {
+  async update({
+    data,
+    params,
+  }: UpdateTransactionDTO): Promise<TransactionDTO> {
     const transaction = await prisma.transaction.update({
       where: {
-        id: data.id,
-        userId: data.userId,
+        id: params.id,
+        userId: params.userId,
       },
       data: {
         description: data.description,
@@ -54,7 +61,7 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
     return transaction;
   }
 
-  async delete(params: DeleteTransactionType): Promise<string | null> {
+  async delete(params: DeleteTransactionType): Promise<string> {
     const transaction = await prisma.transaction.delete({
       where: {
         id: params.transactionId,
@@ -68,24 +75,25 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
     return transaction.id;
   }
 
-  async getListByFilters(
-    params: ListOfTransactionsType
-  ): Promise<ListOfTransactionsDTO> {
+  async getListByFilters({
+    params,
+    filters,
+  }: ListOfTransactionsType): Promise<ListOfTransactionsDTO> {
     const transactionsWhere: Prisma.TransactionWhereInput = {
       userId: params.userId,
       description: {
-        contains: params.description,
+        contains: filters.description,
         mode: 'insensitive',
       },
       shopName: {
-        contains: params.shopName,
+        contains: filters.shopName,
         mode: 'insensitive',
       },
       transactionType: {
-        equals: params.transactionType,
+        in: filters.transactionType,
       },
       paymentMethodId: {
-        equals: params.paymentMethodId,
+        in: filters.paymentMethodId,
       },
     };
 

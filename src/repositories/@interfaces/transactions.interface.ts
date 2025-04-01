@@ -22,13 +22,32 @@ const transactionSchema = z.object({
 });
 
 const createTransactionSchema = z.object({
-  description: z.string(),
-  shopName: z.string(),
-  amountInCents: z.number(),
-  paymentAt: z.date(),
-  transactionType: transactionTypeSchema,
-  userId: z.string(),
-  paymentMethodId: z.string(),
+  params: z.object({
+    userId: z.string(),
+  }),
+  data: z.object({
+    description: z.string(),
+    shopName: z.string(),
+    amountInCents: z.number(),
+    paymentAt: z.date(),
+    transactionType: transactionTypeSchema,
+    paymentMethodId: z.string(),
+  }),
+});
+
+const updateTransactionSchema = z.object({
+  params: z.object({
+    id: z.string(),
+    userId: z.string(),
+  }),
+  data: z.object({
+    description: z.string(),
+    shopName: z.string(),
+    amountInCents: z.number(),
+    paymentAt: z.date(),
+    transactionType: transactionTypeSchema,
+    paymentMethodId: z.string(),
+  }),
 });
 
 const listOfTransactions = z.object({
@@ -37,12 +56,21 @@ const listOfTransactions = z.object({
 });
 
 const getListParams = z.object({
-  userId: z.string(),
-  paymentMethodId: z.string(),
-  description: z.string(),
-  shopName: z.string(),
-  transactionType: transactionTypeSchema,
-  page: z.number(),
+  params: z.object({
+    userId: z.string(),
+    page: z.number().optional().default(1),
+  }),
+  filters: z.object({
+    description: z.string().optional().default(''),
+    shopName: z.string().optional().default(''),
+    paymentMethodId: z.array(z.string()).optional(),
+    transactionType: z
+      .tuple([
+        z.literal(TransactionType.EXPENSES),
+        z.literal(TransactionType.REVENUE),
+      ])
+      .optional(),
+  }),
 });
 
 const findByIdParams = z.object({
@@ -56,7 +84,8 @@ const deleteParams = z.object({
 });
 
 type TransactionDTO = z.infer<typeof transactionSchema>;
-type CreateTransactionDTO = z.infer<typeof transactionSchema>;
+type CreateTransactionDTO = z.infer<typeof createTransactionSchema>;
+type UpdateTransactionDTO = z.infer<typeof updateTransactionSchema>;
 type ListOfTransactionsDTO = z.infer<typeof listOfTransactions>;
 
 type ListOfTransactionsType = z.infer<typeof getListParams>;
@@ -65,9 +94,9 @@ type DeleteTransactionType = z.infer<typeof deleteParams>;
 
 interface ITransactionsRepository {
   create(data: CreateTransactionDTO): Promise<TransactionDTO>;
-  update(data: CreateTransactionDTO): Promise<TransactionDTO>;
+  update(data: UpdateTransactionDTO): Promise<TransactionDTO>;
   findById(params: FindByIdTransactionType): Promise<TransactionDTO | null>;
-  delete(params: DeleteTransactionType): Promise<string | null>;
+  delete(params: DeleteTransactionType): Promise<string>;
   getListByFilters(
     params: ListOfTransactionsType
   ): Promise<ListOfTransactionsDTO>;
@@ -81,6 +110,7 @@ export {
   listOfTransactions,
   transactionSchema,
   transactionTypeSchema,
+  updateTransactionSchema,
 };
 
 export type {
@@ -91,4 +121,5 @@ export type {
   ListOfTransactionsDTO,
   ListOfTransactionsType,
   TransactionDTO,
+  UpdateTransactionDTO,
 };
