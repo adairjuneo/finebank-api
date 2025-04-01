@@ -11,7 +11,7 @@
     "dev:email": "email dev --dir=emails --port=3334",
     "start": "node --env-file=.env dist/index.js",
     "build": "tsup src --out-dir dist",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "npx tsc --noEmit",
     "lint": "eslint --max-warnings=0",
     "prettier:fix": "npx prettier . --write",
     "clean": "rm -rf node_modules && rm -rf dist",

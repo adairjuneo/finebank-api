@@ -7,8 +7,8 @@ import type {
   DeleteTransactionType,
   FindByIdTransactionType,
   ITransactionsRepository,
-  ListOfTransactionsDTO,
-  ListOfTransactionsType,
+  ListTransactionsDTO,
+  ListTransactionsType,
   TransactionDTO,
   UpdateTransactionDTO,
 } from '../@interfaces/transactions.interface';
@@ -89,7 +89,7 @@ export class InMemoryTransactionsRepository implements ITransactionsRepository {
   async getListByFilters({
     params,
     filters,
-  }: ListOfTransactionsType): Promise<ListOfTransactionsDTO> {
+  }: ListTransactionsType): Promise<ListTransactionsDTO> {
     const listOfAllTransactions = this.transactions.filter(
       (transaction) =>
         transaction.userId === params.userId &&

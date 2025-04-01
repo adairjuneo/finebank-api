@@ -8,8 +8,8 @@ import type {
   DeleteTransactionType,
   FindByIdTransactionType,
   ITransactionsRepository,
-  ListOfTransactionsDTO,
-  ListOfTransactionsType,
+  ListTransactionsDTO,
+  ListTransactionsType,
   TransactionDTO,
   UpdateTransactionDTO,
 } from '../@interfaces/transactions.interface';
@@ -78,7 +78,7 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
   async getListByFilters({
     params,
     filters,
-  }: ListOfTransactionsType): Promise<ListOfTransactionsDTO> {
+  }: ListTransactionsType): Promise<ListTransactionsDTO> {
     const transactionsWhere: Prisma.TransactionWhereInput = {
       userId: params.userId,
       description: {

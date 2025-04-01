@@ -86,9 +86,9 @@ const deleteParams = z.object({
 type TransactionDTO = z.infer<typeof transactionSchema>;
 type CreateTransactionDTO = z.infer<typeof createTransactionSchema>;
 type UpdateTransactionDTO = z.infer<typeof updateTransactionSchema>;
-type ListOfTransactionsDTO = z.infer<typeof listOfTransactions>;
+type ListTransactionsDTO = z.infer<typeof listOfTransactions>;
 
-type ListOfTransactionsType = z.infer<typeof getListParams>;
+type ListTransactionsType = z.infer<typeof getListParams>;
 type FindByIdTransactionType = z.infer<typeof findByIdParams>;
 type DeleteTransactionType = z.infer<typeof deleteParams>;
 
@@ -97,9 +97,7 @@ interface ITransactionsRepository {
   update(data: UpdateTransactionDTO): Promise<TransactionDTO>;
   findById(params: FindByIdTransactionType): Promise<TransactionDTO | null>;
   delete(params: DeleteTransactionType): Promise<string>;
-  getListByFilters(
-    params: ListOfTransactionsType
-  ): Promise<ListOfTransactionsDTO>;
+  getListByFilters(params: ListTransactionsType): Promise<ListTransactionsDTO>;
 }
 
 export {
@@ -118,8 +116,8 @@ export type {
   DeleteTransactionType,
   FindByIdTransactionType,
   ITransactionsRepository,
-  ListOfTransactionsDTO,
-  ListOfTransactionsType,
+  ListTransactionsDTO,
+  ListTransactionsType,
   TransactionDTO,
   UpdateTransactionDTO,
 };
