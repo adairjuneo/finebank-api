@@ -119,12 +119,12 @@ export class PrismaPaymentMethodsRepository
       }),
     ]);
 
-    const totalPagesOfPaymentMethods = Math.round(
+    const totalPagesOfPaymentMethods = Math.ceil(
       prismaReturn[0] / env.PAGINATION_PAGE_SIZE
     );
 
     const hasNextPageOfPaymentMethods =
-      totalPagesOfPaymentMethods !== page ? false : true;
+      totalPagesOfPaymentMethods > page ? true : false;
 
     return {
       data: prismaReturn[1],

@@ -90,10 +90,10 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
         mode: 'insensitive',
       },
       transactionType: {
-        in: filters.transactionType,
+        in: filters.transactionTypes,
       },
       paymentMethodId: {
-        in: filters.paymentMethodId,
+        in: filters.paymentMethodsIds,
       },
     };
 
@@ -116,12 +116,12 @@ export class PrismaTransactionsRepository implements ITransactionsRepository {
     const listOfTransactions = transactions[1];
     const countOfTransactions = transactions[0];
 
-    const totalPagesOfTransactions = Math.round(
+    const totalPagesOfTransactions = Math.ceil(
       countOfTransactions / env.PAGINATION_PAGE_SIZE
     );
 
     const hasNextPageOfTransactions =
-      totalPagesOfTransactions !== params.page ? false : true;
+      totalPagesOfTransactions > params.page ? true : false;
 
     return {
       data: listOfTransactions,

@@ -63,12 +63,13 @@ const getListParams = z.object({
   filters: z.object({
     description: z.string().optional().default(''),
     shopName: z.string().optional().default(''),
-    paymentMethodId: z.array(z.string()).optional(),
-    transactionType: z
-      .tuple([
-        z.literal(TransactionType.EXPENSES),
-        z.literal(TransactionType.REVENUE),
-      ])
+    paymentMethodsIds: z.array(z.string()).optional(),
+    transactionTypes: z
+      .array(
+        z
+          .literal(TransactionType.EXPENSES)
+          .or(z.literal(TransactionType.REVENUE))
+      )
       .optional(),
   }),
 });

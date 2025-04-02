@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
+import _ from 'lodash';
+
 import { env } from '@/env';
 
 import type {
@@ -90,29 +92,38 @@ export class InMemoryTransactionsRepository implements ITransactionsRepository {
     params,
     filters,
   }: ListTransactionsType): Promise<ListTransactionsDTO> {
-    const listOfAllTransactions = this.transactions.filter(
-      (transaction) =>
-        transaction.userId === params.userId &&
-        transaction.description
-          .toLowerCase()
-          .includes(filters.description.toLowerCase()) &&
-        transaction.shopName
-          .toLowerCase()
-          .includes(filters.shopName.toLowerCase()) &&
-        filters.transactionType?.includes(transaction.transactionType) &&
-        filters.paymentMethodId?.includes(transaction.paymentMethodId)
-    );
+    const listOfAllTransactions = _.filter(this.transactions, (item) => {
+      const descriptionFilter =
+        _.isEmpty(item.description) ||
+        _.includes(_.toLower(item.description), _.toLower(filters.description));
+      const shopNameFilter =
+        _.isEmpty(item.shopName) ||
+        _.includes(_.toLower(item.shopName), _.toLower(filters.shopName));
+      const paymentMethodsFilter =
+        _.isEmpty(filters.paymentMethodsIds) ||
+        _.includes(filters.paymentMethodsIds, item.paymentMethodId);
+      const transactionTypesFilter =
+        _.isEmpty(filters.transactionTypes) ||
+        _.includes(filters.transactionTypes, item.transactionType);
+
+      return (
+        descriptionFilter &&
+        shopNameFilter &&
+        paymentMethodsFilter &&
+        transactionTypesFilter
+      );
+    });
 
     const transactionsPaginated = listOfAllTransactions.slice(
       (params.page - 1) * env.PAGINATION_PAGE_SIZE,
       params.page * env.PAGINATION_PAGE_SIZE
     );
     const totalCount = listOfAllTransactions.length;
-    const totalPagesOfTransactions = Math.round(
+    const totalPagesOfTransactions = Math.ceil(
       totalCount / env.PAGINATION_PAGE_SIZE
     );
     const hasNextPageOfTransactions =
-      totalPagesOfTransactions !== params.page ? false : true;
+      totalPagesOfTransactions > params.page ? true : false;
 
     return {
       data: transactionsPaginated,
