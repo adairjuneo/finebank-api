@@ -88,7 +88,6 @@ type TransactionDTO = z.infer<typeof transactionSchema>;
 type CreateTransactionDTO = z.infer<typeof createTransactionSchema>;
 type UpdateTransactionDTO = z.infer<typeof updateTransactionSchema>;
 type ListTransactionsDTO = z.infer<typeof listOfTransactions>;
-
 type ListTransactionsType = z.infer<typeof getListParams>;
 type FindByIdTransactionType = z.infer<typeof findByIdParams>;
 type DeleteTransactionType = z.infer<typeof deleteParams>;
