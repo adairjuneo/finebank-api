@@ -1,4 +1,4 @@
-import { comparePassword, hashPassword } from '@/lib/password';
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { BadRequestError } from '@/middlewares/errors/bad-request.error';
 import type { ITokensRepository } from '@/repositories/@interfaces/tokens.interface';
 import type { IUsersRepository } from '@/repositories/@interfaces/users.interface';
@@ -13,7 +13,8 @@ interface ResetPasswordServiceRequest {
 export class ResetPasswordService {
   constructor(
     private usersRepository: IUsersRepository,
-    private tokensRepository: ITokensRepository
+    private tokensRepository: ITokensRepository,
+    private hashAdapter: IHashAdapter
   ) {}
   async execute(data: ResetPasswordServiceRequest): Promise<void> {
     const { code, password } = data;
@@ -30,7 +31,7 @@ export class ResetPasswordService {
       throw new BadRequestError('User not found.');
     }
 
-    const newPasswordMatchWithCurrent = await comparePassword(
+    const newPasswordMatchWithCurrent = await this.hashAdapter.compareHash(
       password,
       userFind.passwordHash
     );
@@ -41,7 +42,7 @@ export class ResetPasswordService {
       );
     }
 
-    const newPasswordHashed = await hashPassword(password);
+    const newPasswordHashed = await this.hashAdapter.createHash(password);
 
     await this.usersRepository.update(
       {
@@ -59,9 +60,11 @@ export class ResetPasswordService {
 export const makeWithPrismaResetPasswordService = () => {
   const userRepository = new PrismaUsersRepository();
   const tokenRepository = new PrismaTokensRepository();
+  const hashAdapter = new HashAdapter();
   const resetPasswordService = new ResetPasswordService(
     userRepository,
-    tokenRepository
+    tokenRepository,
+    hashAdapter
   );
   return resetPasswordService;
 };

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { BadRequestError } from '@/middlewares/errors/bad-request.error';
 import { InMemoryTokensRepository } from '@/repositories/in-memory/tokens.repository';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/users.repository';
@@ -8,6 +9,7 @@ import { CreateAccountService } from './create-account.service';
 import { RequestRecoveryPasswordService } from './request-recovery-password.service';
 import { ResetPasswordService } from './reset-password.service';
 
+let hashAdapter: IHashAdapter;
 let usersRepository: InMemoryUsersRepository;
 let tokenRepository: InMemoryTokensRepository;
 let createAccountService: CreateAccountService;
@@ -18,10 +20,15 @@ describe('Reset password service test', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository();
     tokenRepository = new InMemoryTokensRepository();
-    createAccountService = new CreateAccountService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
     resetPasswordService = new ResetPasswordService(
       usersRepository,
-      tokenRepository
+      tokenRepository,
+      hashAdapter
     );
     requestRecoveryPasswordService = new RequestRecoveryPasswordService(
       usersRepository,

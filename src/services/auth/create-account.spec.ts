@@ -1,18 +1,24 @@
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { ZodFieldError } from '@/middlewares/errors/zod-field.error';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/users.repository';
 
 import { CreateAccountService } from './create-account.service';
 
+let hashAdapter: IHashAdapter;
 let usersRepository: InMemoryUsersRepository;
 let createAccountService: CreateAccountService;
 
 describe('Create account service test', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository();
-    createAccountService = new CreateAccountService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
   });
 
   it('should be able to create a new user account', async () => {

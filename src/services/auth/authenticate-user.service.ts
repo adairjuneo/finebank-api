@@ -1,4 +1,4 @@
-import { comparePassword } from '@/lib/password';
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { BadRequestError } from '@/middlewares/errors/bad-request.error';
 import type {
   CreateUserDTO,
@@ -12,7 +12,10 @@ interface AuthenticateUserServiceResponse {
 }
 
 export class AuthenticateUserService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private hashAdapter: IHashAdapter
+  ) {}
   async execute(
     data: Pick<CreateUserDTO, 'email' | 'password'>
   ): Promise<AuthenticateUserServiceResponse> {
@@ -24,7 +27,7 @@ export class AuthenticateUserService {
       throw new BadRequestError('Invalid credentials provided.');
     }
 
-    const passwordIsValid = await comparePassword(
+    const passwordIsValid = await this.hashAdapter.compareHash(
       password,
       userExists.passwordHash
     );
@@ -39,6 +42,10 @@ export class AuthenticateUserService {
 
 export const makeWithPrismaAuthenticateUserService = () => {
   const userRepository = new PrismaUsersRepository();
-  const createUserService = new AuthenticateUserService(userRepository);
+  const hashAdapter = new HashAdapter();
+  const createUserService = new AuthenticateUserService(
+    userRepository,
+    hashAdapter
+  );
   return createUserService;
 };

@@ -3,6 +3,7 @@ import { TransactionType } from '@prisma/client';
 import { addDays, subDays } from 'date-fns';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { env } from '@/env';
 import type { PaymentMethodDTO } from '@/repositories/@interfaces/payment-methods.interface';
 import type { UserDTO } from '@/repositories/@interfaces/users.interface';
@@ -14,6 +15,7 @@ import { CreateAccountService } from '../auth/create-account.service';
 import { CreatePaymentMethodService } from '../payment-methods/create-payment-method.service';
 import { ListTransactionsService } from './list-transactions.service';
 
+let hashAdapter: IHashAdapter;
 let transactionsRepository: InMemoryTransactionsRepository;
 let paymentMethodsRepository: InMemoryPaymentMethodsRepository;
 let listTransactionsService: ListTransactionsService;
@@ -29,7 +31,11 @@ describe('List payment methods service test', () => {
     usersRepository = new InMemoryUsersRepository();
     transactionsRepository = new InMemoryTransactionsRepository();
     paymentMethodsRepository = new InMemoryPaymentMethodsRepository();
-    createAccountService = new CreateAccountService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
     createPaymentMethodService = new CreatePaymentMethodService(
       paymentMethodsRepository
     );

@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { ResourceNotFoundError } from '@/middlewares/errors/resource-not-found.error';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/users.repository';
 
 import { CreateAccountService } from '../auth/create-account.service';
 import { GetProfileService } from './get-profile.service';
 
+let hashAdapter: IHashAdapter;
 let usersRepository: InMemoryUsersRepository;
 let getProfileService: GetProfileService;
 let createAccountService: CreateAccountService;
@@ -13,8 +15,12 @@ let createAccountService: CreateAccountService;
 describe('Get user account profile service test', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository();
+    hashAdapter = new HashAdapter();
     getProfileService = new GetProfileService(usersRepository);
-    createAccountService = new CreateAccountService(usersRepository);
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
 
     await createAccountService.execute({
       name: 'Dev Test',

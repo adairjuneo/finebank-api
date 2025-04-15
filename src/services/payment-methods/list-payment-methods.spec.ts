@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { env } from '@/env';
 import type { UserDTO } from '@/repositories/@interfaces/users.interface';
 import { InMemoryPaymentMethodsRepository } from '@/repositories/in-memory/payment-methods.repository';
@@ -9,6 +10,7 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/users.reposito
 import { CreateAccountService } from '../auth/create-account.service';
 import { ListPaymentMethodsService } from './list-payment-methods.service';
 
+let hashAdapter: IHashAdapter;
 let paymentMethodsRepository: InMemoryPaymentMethodsRepository;
 let listPaymentMethodsService: ListPaymentMethodsService;
 let createAccountService: CreateAccountService;
@@ -19,7 +21,11 @@ describe('List payment methods service test', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository();
     paymentMethodsRepository = new InMemoryPaymentMethodsRepository();
-    createAccountService = new CreateAccountService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
     listPaymentMethodsService = new ListPaymentMethodsService(
       paymentMethodsRepository
     );

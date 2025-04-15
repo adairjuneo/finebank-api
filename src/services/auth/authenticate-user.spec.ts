@@ -1,12 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { BadRequestError } from '@/middlewares/errors/bad-request.error';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/users.repository';
 
 import { AuthenticateUserService } from './authenticate-user.service';
 import { CreateAccountService } from './create-account.service';
 
+let hashAdapter: IHashAdapter;
 let usersRepository: InMemoryUsersRepository;
 let createAccountService: CreateAccountService;
 let authenticateUserService: AuthenticateUserService;
@@ -14,8 +16,15 @@ let authenticateUserService: AuthenticateUserService;
 describe('Authenticate user service test', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository();
-    createAccountService = new CreateAccountService(usersRepository);
-    authenticateUserService = new AuthenticateUserService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
+    authenticateUserService = new AuthenticateUserService(
+      usersRepository,
+      hashAdapter
+    );
 
     await createAccountService.execute({
       name: 'Dev Test',

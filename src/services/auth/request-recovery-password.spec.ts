@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { InMemoryTokensRepository } from '@/repositories/in-memory/tokens.repository';
 import { InMemoryUsersRepository } from '@/repositories/in-memory/users.repository';
 
 import { CreateAccountService } from './create-account.service';
 import { RequestRecoveryPasswordService } from './request-recovery-password.service';
 
+let hashAdapter: IHashAdapter;
 let usersRepository: InMemoryUsersRepository;
 let tokensRepository: InMemoryTokensRepository;
 let createAccountService: CreateAccountService;
@@ -15,7 +17,11 @@ describe('Request recovery password service test', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository();
     tokensRepository = new InMemoryTokensRepository();
-    createAccountService = new CreateAccountService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
     requestRecoveryPasswordService = new RequestRecoveryPasswordService(
       usersRepository,
       tokensRepository

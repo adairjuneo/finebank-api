@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { ResourceNotFoundError } from '@/middlewares/errors/resource-not-found.error';
 import { ZodFieldError } from '@/middlewares/errors/zod-field.error';
 import type { PaymentMethodDTO } from '@/repositories/@interfaces/payment-methods.interface';
@@ -10,6 +11,7 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/users.reposito
 import { CreateAccountService } from '../auth/create-account.service';
 import { UpdatePaymentMethodService } from './update-payment-method.service';
 
+let hashAdapter: IHashAdapter;
 let paymentMethodsRepository: InMemoryPaymentMethodsRepository;
 let updatePaymentMethodService: UpdatePaymentMethodService;
 let createAccountService: CreateAccountService;
@@ -21,7 +23,11 @@ describe('Update payment method service test', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository();
     paymentMethodsRepository = new InMemoryPaymentMethodsRepository();
-    createAccountService = new CreateAccountService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
     updatePaymentMethodService = new UpdatePaymentMethodService(
       paymentMethodsRepository
     );

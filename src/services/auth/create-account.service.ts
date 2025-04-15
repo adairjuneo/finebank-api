@@ -1,4 +1,4 @@
-import { hashPassword } from '@/lib/password';
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { ZodFieldError } from '@/middlewares/errors/zod-field.error';
 import type {
   CreateUserDTO,
@@ -12,12 +12,15 @@ interface CreateAccountServiceResponse {
 }
 
 export class CreateAccountService {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private hashAdapter: IHashAdapter
+  ) {}
 
   async execute(data: CreateUserDTO): Promise<CreateAccountServiceResponse> {
     const { name, email, password } = data;
 
-    const passwordHash = await hashPassword(password);
+    const passwordHash = await this.hashAdapter.createHash(password);
 
     const userWithSameEmail = await this.usersRepository.findByEmail(email);
 
@@ -37,6 +40,10 @@ export class CreateAccountService {
 
 export const makeWithPrismaCreateAccountService = () => {
   const userRepository = new PrismaUsersRepository();
-  const createUserService = new CreateAccountService(userRepository);
+  const hashAdapter = new HashAdapter();
+  const createUserService = new CreateAccountService(
+    userRepository,
+    hashAdapter
+  );
   return createUserService;
 };

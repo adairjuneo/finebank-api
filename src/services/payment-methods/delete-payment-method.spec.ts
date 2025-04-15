@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { HashAdapter, type IHashAdapter } from '@/adapters';
 import { ResourceNotFoundError } from '@/middlewares/errors/resource-not-found.error';
 import type { PaymentMethodDTO } from '@/repositories/@interfaces/payment-methods.interface';
 import type { UserDTO } from '@/repositories/@interfaces/users.interface';
@@ -9,6 +10,7 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory/users.reposito
 import { CreateAccountService } from '../auth/create-account.service';
 import { DeletePaymentMethodService } from './delete-payment-method.service';
 
+let hashAdapter: IHashAdapter;
 let paymentMethodsRepository: InMemoryPaymentMethodsRepository;
 let deletePaymentMethodService: DeletePaymentMethodService;
 let createAccountService: CreateAccountService;
@@ -20,7 +22,11 @@ describe('Create payment method service test', () => {
   beforeEach(async () => {
     usersRepository = new InMemoryUsersRepository();
     paymentMethodsRepository = new InMemoryPaymentMethodsRepository();
-    createAccountService = new CreateAccountService(usersRepository);
+    hashAdapter = new HashAdapter();
+    createAccountService = new CreateAccountService(
+      usersRepository,
+      hashAdapter
+    );
     deletePaymentMethodService = new DeletePaymentMethodService(
       paymentMethodsRepository
     );
