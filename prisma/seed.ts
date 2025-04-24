@@ -3,7 +3,8 @@ import { faker } from '@faker-js/faker';
 import { addDays, subDays } from 'date-fns';
 import { Prisma, PrismaClient, TransactionType } from '@prisma/client';
 
-import { hashPassword } from '../src/lib/password';
+import { HashAdapter } from '../src/adapters';
+const hashPassword = new HashAdapter();
 
 const prisma = new PrismaClient();
 
@@ -23,7 +24,7 @@ const seed = async () => {
    * Creating Users
    */
 
-  const passwordHashed = await hashPassword('123456');
+  const passwordHashed = await hashPassword.createHash('123456');
 
   const [devTest, userOne, userTwo] = await prisma.$transaction([
     prisma.user.create({

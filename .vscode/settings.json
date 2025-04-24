@@ -1,6 +1,29 @@
 {
-  "cSpell.words": [
-    "finebank",
-    "Finebank"
-  ]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "symbols.files.associations": {
+    "*.module.ts": "nest",
+    "*.service.ts": "ts",
+    "*.guard.ts": "typescript",
+    "*.spec.ts": "ts-test",
+    "*.e2e-spec.ts": "ts-test",
+    "*.mock.ts": "ts-test",
+    "vitest.config.e2e.ts": "vite",
+    ".env.development.local": "gear",
+    ".env.test.local": "gear",
+    ".env.local": "gear",
+    ".env.example": "gear",
+    "*.interface.ts": "ts-types"
+  },
+  "symbols.folders.associations": {
+    "http": "folder-router",
+    "adapters": "folder-helpers",
+    "repositories": "folder-modules",
+    "in-memory": "folder-core",
+    "interfaces": "folder-interfaces",
+    "@interfaces": "folder-interfaces",
+    "errors": "folder-red",
+    ".husky": "pug"
+  },
+  "cSpell.words": ["finebank", "Finebank"]
 }
