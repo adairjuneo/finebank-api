@@ -29,6 +29,17 @@ What the user can or not to do in the app. This requirements are easy defined wh
 - [ ] Should be able to update transaction;
 - [x] Should be able to list transactions;
 - [ ] Should be able to delete transaction;
+- [ ] Should be able to create new transaction category;
+- [ ] Should be able to update transaction category;
+- [ ] Should be able to list transaction categories;
+- [ ] Should be able to delete transaction category;
+- [ ] Should be able to get metrics with the list of last six(6) transactions per type(six revenues and six expenses);
+- [ ] Should be able to get metrics with the total of all transactions from the last seven(7) days, compared to the last week;
+  - [ ] This route its for show the user metrics about your transactions per week in compare with the last one.
+- [ ] Should be able to get metric to receive the last six(6) more used categories in current month, compared to the last one;
+  - [ ] This route its for show the user metrics about your six(6) more used categories.
+- [ ] 🟡 Should be able to schedule revenues or expenses to management in the future.
+- [ ] 🟡 Should be able to receive notifications about scheduled registers or important things in app.
 
 - [ ] Should be able to ...;
 - [ ] Should not be able to ...;
@@ -41,6 +52,8 @@ Paths about each rule can or not follow, this paths determined what conditions t
 - [x] The user can not be able to register with duplicate email;
 - [ ] The user can not be able to request two passwords recoveries at same time;
 - [x] The user can not be able to create payment methods with same description;
+- [ ] The user can be able to change your personal informations in app.
+- [ ] 🟡 The user can be able to change your profile picture.
 
 - [ ] The user can be able to ...;
 - [ ] The entity can not be able to ...;
