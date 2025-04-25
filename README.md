@@ -17,6 +17,19 @@ Whats the challenges and how difficult is to apply some like this for build APIs
 The functional requirements is the specifics functionalities about what the system provides. Down bellow its the requirements this system.
 What the user can or not to do in the app. This requirements are easy defined when the client or team create the product inside a company/software house. **The user can/not can...** or **The entity can/not can do...**.
 
+- [x] Should be able to new users register;
+- [x] Should be able to authenticate;
+- [x] Should be able to request and recover user password;
+- [x] Should be able to get a user profile when authenticated;
+- [x] Should be able to create new payment methods;
+- [x] Should be able to update payment method;
+- [x] Should be able to list payment methods;
+- [x] Should be able to delete payment method;
+- [x] Should be able to create new transactions;
+- [ ] Should be able to update transaction;
+- [x] Should be able to list transactions;
+- [ ] Should be able to delete transaction;
+
 - [ ] Should be able to ...;
 - [ ] Should not be able to ...;
 
@@ -25,6 +38,10 @@ What the user can or not to do in the app. This requirements are easy defined wh
 The business rules describe how the software must be operate inside the commercial and organizational guidelines.
 Paths about each rule can or not follow, this paths determined what conditions those requirements can or not been executed. **The user can/not can...** or **The entity can/not can do...**.
 
+- [x] The user can not be able to register with duplicate email;
+- [ ] The user can not be able to request two passwords recoveries at same time;
+- [x] The user can not be able to create payment methods with same description;
+
 - [ ] The user can be able to ...;
 - [ ] The entity can not be able to ...;
 
@@ -32,11 +49,15 @@ Paths about each rule can or not follow, this paths determined what conditions t
 
 The non functional requirements define attributes about the system, like to performance, security and maintainability.
 
+- [x] In authentication by user, we need identify the authentication by JWT(JSON Web Token);
+- [x] The user password must be encrypted samehow, should not be stored raw;
+- [x] All data must be stored in a PostgreSQL database;
+- [x] All routes that return a list, neeed to be paginated with twenty(20) records;
+
 - [ ] The system have to ...;
 - [ ] The software have to ...;
-- [ ] The user password must be encrypted ...;
 
-#### Sponsors 🫂
+#### Sponsors 🤝
 
 [fastify](https://github.com/fastify/fastify)
 [prisma](https://github.com/prisma/prisma)
@@ -44,4 +65,4 @@ The non functional requirements define attributes about the system, like to perf
 ---
 
 _This repository is part of my practical studies about **Software Engineering** and development._
-[dev-juneo](https://github.com/adairjuneoaf)
+[dev-juneo](https://github.com/adairjuneo)
