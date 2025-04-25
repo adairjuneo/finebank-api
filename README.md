@@ -70,6 +70,10 @@ The non functional requirements define attributes about the system, like to perf
 - [ ] The system have to ...;
 - [ ] The software have to ...;
 
+#### Observations 📝
+
+- Notes with this sinalization(🟡), need attention to implement. In most cases need to find way to implement, updating infrastructure or adding some library.
+
 #### Sponsors 🤝
 
 [fastify](https://github.com/fastify/fastify)
